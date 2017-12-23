@@ -1,46 +1,41 @@
-# **Finding Lane Lines on the Road** 
-
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
+# **Finding Lane Lines on the Road**
 ---
 
-**Finding Lane Lines on the Road**
-
 The goals / steps of this project are the following:
-* Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
-
-
-[//]: # (Image References)
-
-[image1]: ./examples/grayscale.jpg "Grayscale"
-
+1. Make a pipeline that finds lane lines on the road
+2.Reflect on your work in a written report
 ---
 
 ### Reflection
 
-### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
+## 1. Describe your pipeline.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
+My pipeline consisted of seven steps:
+#### 1. Read in the original image
+This was the easiest part. Aside from importing all of the libraries, reading in an image was quite easy to accomplish.
+[Original](./test_images_output/final.jpg)
 
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
+#### 2. Grayscale the image
+Before applying any of other transformations, the image must be gray-scaled to make it easier for Canny edge detection to be able to find gradients between areas of dark and light pixels.
+[Grayscaled](./test_images_output/gray.jpg)
+#### 3. Apply a Gaussian blur
+To reduce noise in the picture we apply a blur that allows nearby pixels to blend in together and facilitate the Canny edge algorithm.
 
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
+[Blurred](./test_images_output/blur.jpg)
+#### 4. Apply Canny Edge detection
+#### 5. Apply a Region Mask
+#### 6. Apply the Hough transform
+#### 7. Apply Final Mask
 
-![alt text][image1]
+## 2. Identify potential shortcomings with your current pipeline
+Completetely fails the challenge video
 
-
-### 2. Identify potential shortcomings with your current pipeline
-
-
-One potential shortcoming would be what would happen when ... 
+One potential shortcoming would be what would happen when ...
 
 Another shortcoming could be ...
 
 
-### 3. Suggest possible improvements to your pipeline
+## 3. Suggest possible improvements to your pipeline
 
 A possible improvement would be to ...
 

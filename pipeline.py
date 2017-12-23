@@ -261,7 +261,7 @@ class Gray:
     # Returns:
         A grayscaled image
     """
-    def __call__(self, image, save=False, **kwargs):
+    def __call__(self, image, save=True, **kwargs):
         image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         if save and 'key' in kwargs:
             mpimg.imsave(f"test_images_output/image-{kwargs['key']}/gray.jpg", image, cmap="gray")
@@ -273,7 +273,7 @@ class Canny:
         self.low_threshold = low_threshold
         self.high_threshold = high_threshold
 
-    def __call__(self, image, save=False, **kwargs):
+    def __call__(self, image, save=True, **kwargs):
         image = cv2.Canny(image, self.low_threshold, self.high_threshold)
         if save and 'key' in kwargs:
             mpimg.imsave(f"test_images_output/image-{kwargs['key']}/canny.jpg", image, cmap='gray')
@@ -290,7 +290,7 @@ class Gaussian:
             raise ValueError('`kernel_size` must be an odd number')
         self.kernel_size = kernel_size
 
-    def __call__(self, image, save=False, **kwargs):
+    def __call__(self, image, save=True, **kwargs):
         image = cv2.GaussianBlur(image, (self.kernel_size, self.kernel_size), 0)
         if save and 'key' in kwargs:
             mpimg.imsave(f"test_images_output/image-{kwargs['key']}/blur.jpg", image, cmap='gray')
@@ -308,7 +308,7 @@ class Region:
     def __init__(self, vertices):
         self.vertices = vertices
 
-    def __call__(self, image, save=False, **kwargs):
+    def __call__(self, image, save=True, **kwargs):
         mask = np.zeros_like(image)
 
         if len(image.shape) > 2:
@@ -352,7 +352,7 @@ class HoughTransform:
             for x1,y1,x2,y2 in line:
                 cv2.line(img, (x1, y1), (x2, y2), color, thickness)
 
-    def draw_extrapolated_lines(self, image, lines, color=[255, 0, 0], thickness=10, save=False):
+    def draw_extrapolated_lines(self, image, lines, color=[255, 0, 0], thickness=10, save=True):
         """This is where the magic happens!
 
         # Arguments:
@@ -397,7 +397,7 @@ class HoughTransform:
 
 class WeightMask:
     """Applies the extrapolated lines to the original image"""
-    def __call__(self, image, α=0.8, β=1., λ=0, save=False, **kwargs):
+    def __call__(self, image, α=0.8, β=1., λ=0, save=True, **kwargs):
         image = cv2.addWeighted(kwargs['initial_image'], α, image, β, λ)
         if save and 'key' in kwargs:
             mpimg.imsave(f"test_images_output/image-{kwargs['key']}/final.jpg", image)
@@ -406,10 +406,9 @@ class WeightMask:
 
 pipeline = Pipeline()
 
-image_paths = ["solidWhiteCurve.jpg"]
+image_paths = os.listdir('test_images')
 pipeline.add_images(image_paths)
 
-pipeline.add_images(img)
 pipeline.add(Gray())
 pipeline.add(Gaussian(kernel_size=5))
 pipeline.add(Canny())
@@ -417,8 +416,4 @@ pipeline.add(Region(vertices=np.array([[[100, 560], [445, 325], [505, 325], [940
 pipeline.add(HoughTransform(extrapolate=True))
 pipeline.add(WeightMask())
 
-output_image = pipeline.run(single_image=True)
-
-plt.imshow(output_image)
-plt.show()
-
+output_image = pipeline.run(single_image=False)
